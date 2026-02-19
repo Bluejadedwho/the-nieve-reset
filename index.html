@@ -1,0 +1,2118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>The Nieve Reset</title>
+  <meta name="theme-color" content="#0b1020" />
+
+    <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+<!-- iPhone Home Screen icon (Safari: Share -> Add to Home Screen) -->
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="The Nieve Reset" />
+
+  <!-- Optional favicon (browser tab icon). Safe to ignore if you do not want it yet.
+       If you keep logo_128.png in the same folder, you can uncomment below.
+  -->
+  <!--
+-->
+
+  <style>
+    :root{
+      --bg0:#ffffff;
+      --bg1:#ffffff;
+
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.045);
+      --stroke: rgba(0,71,171,.35);
+      --stroke2: rgba(0,71,171,.45);
+
+      --text: #111111;
+      --muted: rgba(60,60,80,.66);
+      --muted2: rgba(80,80,100,.50);
+
+
+      --aurora1: rgba(0,71,171,.15);
+      --aurora2: rgba(0,71,171,.40);
+      --aurora3: rgba(0,71,171,.35);
+
+      --radius: 18px;
+      --radius2: 24px;
+      --pad: 18px;
+      --pad2: 22px;
+
+      --fs: 16px;
+
+      /* Title "glass" */
+      --titleA: rgba(0,71,171,.98);
+      --titleB: rgba(0,71,171,.75);
+      --titleGlow: rgba(255,160,210,.35);
+    
+      --sat: env(safe-area-inset-top, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{
+      -webkit-text-size-adjust: 100%;
+ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      font-size: var(--fs);
+      background: linear-gradient(180deg, #dbe6ff 0%, #c7d8ff 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 16px 28px;
+      padding-left: calc(16px + var(--sal));
+      padding-right: calc(16px + var(--sar));
+      padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    }
+
+    /* Splash */
+    .splash{
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background:
+        radial-gradient(900px 640px at 20% 10%, var(--aurora1), transparent 60%),
+        radial-gradient(760px 600px at 90% 30%, var(--aurora2), transparent 55%),
+        radial-gradient(860px 760px at 50% 120%, var(--aurora3), transparent 55%),
+        linear-gradient(180deg, rgba(9,12,22,.96), rgba(7,10,18,.98));
+      backdrop-filter: blur(10px);
+    }
+    .splash.hide{
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .38s ease;
+    }
+    .splashCard{
+      width: min(720px, 100%);
+      border-radius: 26px;
+      border: 1px solid rgba(0,71,171,.40);
+      background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.40));
+      box-shadow: 0 30px 120px rgba(0,0,0,.65);
+      padding: 28px 22px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .splashCard::before{
+      content:"";
+      position:absolute;
+      inset:-120px;
+      background: radial-gradient(circle at 50% 40%, rgba(0,71,171,.35), transparent 60%);
+      filter: blur(10px);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .splashLogoWrap{
+      width: 124px;
+      height: 124px;
+      margin: 0 auto 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,71,171,.45);
+      background: rgba(0,71,171,.14);
+      box-shadow:
+        0 26px 90px rgba(0,0,0,.55),
+        0 0 0 1px rgba(255,255,255,.04) inset;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position: relative;
+      animation: floaty 4.4s ease-in-out infinite;
+    }
+    /* subtle "glass catch" shimmer */
+    .splashLogoWrap::after{
+      content:"";
+      position:absolute;
+      inset:-30px;
+      background: linear-gradient(120deg, transparent 20%, rgba(0,71,171,.45) 42%, transparent 58%);
+      transform: translateX(-40%) rotate(8deg);
+      opacity:.42;
+      filter: blur(1px);
+      animation: shimmer 4.6s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes shimmer{
+      0%,100%{ transform: translateX(-42%) rotate(8deg); opacity:.34; }
+      50%{ transform: translateX(42%) rotate(8deg); opacity:.50; }
+    }
+    @keyframes floaty{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-6px); }
+    }
+@keyframes titleShimmer{
+      0%{ background-position: 0% 50%; }
+      50%{ background-position: 100% 50%; }
+      100%{ background-position: 0% 50%; }
+    }
+    .splashLogo{
+      width: 96px;
+      height: 96px;
+      display:block;
+      object-fit: contain;
+      object-position: 50% 50%;
+      filter: drop-shadow(0 20px 36px rgba(0,0,0,.45));
+      user-select:none;
+      -webkit-user-drag:none;
+      /* Some exported PNGs have uneven transparent padding.
+         Tiny nudge keeps the mark visually centered on iOS. */
+      transform: translate(2px, 1px);
+    }
+    .appTitle{
+      color: #111111;
+      font-weight: 900;
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+      text-shadow: 0 0 18px rgba(0,0,0,.45), 0 0 50px rgba(0,120,255,.85);
+      font-weight: 860;
+      letter-spacing: .2px;
+      font-size: 1.75rem;
+      margin: 0 0 8px;
+      background: linear-gradient(90deg, var(--titleA), var(--titleB), rgba(255,255,255,.96));
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 22px var(--titleGlow);
+      animation: titleShimmer 5.5s ease-in-out infinite;
+    }
+    .splashSub{
+      color: #ffffff;
+      font-weight: 650;
+      text-shadow: 0 2px 14px rgba(0,0,0,.75);
+    }
+
+    /* Buttons */
+    .btn{
+      border: 1px solid rgba(0,71,171,.45);
+      background: rgba(0,71,171,.40);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      font-weight: 780;
+      letter-spacing:.15px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-width: 140px;
+    }
+    .btn:hover{ border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.08); }
+    .btn:active{ transform: scale(.985); }
+    .btnPrimary{
+      border-color: rgba(255,255,255,.22);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      box-shadow: 0 16px 60px rgba(0,0,0,.42), 0 0 0 2px rgba(255,255,255,.04) inset;
+    }
+    .btnGhost{ background: rgba(0,0,0,.18); }
+    .btnDanger{
+      border-color: rgba(255,120,120,.28);
+      background: linear-gradient(180deg, rgba(255,120,120,.16), rgba(255,120,120,.06));
+    }
+
+    /* Top bar */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+      padding-top: calc(10px + var(--sat));
+      padding-bottom: 10px;
+      background: rgba(0,71,171,.15);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      /* Fix: sticky top bar was intercepting taps on the first card below on iOS.
+         Let only its actual controls receive pointer events. */
+      pointer-events: none;
+    }
+    .topbar *{ pointer-events: auto; }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 0;
+      cursor:pointer;
+      user-select:none;
+    }
+    .brandLogoWrap{width:38px;
+      height:38px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.28), rgba(255,255,255,.06) 55%, rgba(0,0,0,.08));
+      box-shadow: 0 10px 26px rgba(0,0,0,.32), inset 0 0 0 1px rgba(0,71,171,.40);
+      margin-right:12px;
+      flex:0 0 auto;
+      overflow:hidden;
+    
+      margin-left: 10px;
+}
+    .brandLogoWrap::after{
+      content:"";
+      position:absolute;
+      inset:-28px;
+      background: linear-gradient(120deg, transparent 20%, rgba(0,71,171,.45) 42%, transparent 58%);
+      transform: translateX(-40%) rotate(8deg);
+      opacity:.28;
+      filter: blur(1px);
+      animation: shimmer 5.4s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .brandLogo{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:contain;
+      transform: scale(0.92);
+      image-rendering: -webkit-optimize-contrast;
+    }
+    .brandTxt{
+      display:flex; flex-direction:column;
+      min-width:0;
+    }
+    .titleSmall{
+      font-weight: 860;
+      letter-spacing: .2px;
+      font-size: 1.06rem;
+      line-height: 1.12;
+      background: linear-gradient(90deg, var(--titleA), var(--titleB), rgba(255,255,255,.96));
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 18px var(--titleGlow);
+      animation: titleShimmer 5.5s ease-in-out infinite;
+    }
+    .subtitle{
+      margin-top: 3px;
+      font-size: .9rem;
+      color: var(--muted);
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    .iconBtn{
+      border: 1px solid var(--stroke);
+      background: rgba(0,71,171,.14);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor:pointer;
+      box-shadow: 0 14px 34px rgba(0,0,0,.28);
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      display:flex; align-items:center; gap:8px;
+      user-select:none;
+    }
+    .iconBtn:active{ transform: scale(.98); }
+    .iconBtn:hover{ border-color: var(--stroke2); background: rgba(0,71,171,.40); }
+    .icon{
+      width: 16px; height: 16px; display:inline-block;
+      opacity:.88;
+    }
+
+    /* Card */
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02), rgba(255,255,255,0));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius2);
+      box-shadow: 0 26px 80px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
+    .glassInner{
+      padding: var(--pad2);
+    }
+
+    /* Tabs */
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin: 10px 0 14px;
+    }
+    .tab{
+      border: 1px solid var(--stroke);
+      background: rgba(0,71,171,.14);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor:pointer;
+      transition: border-color .12s ease, background .12s ease, transform .12s ease;
+      user-select:none;
+      font-weight: 760;
+      letter-spacing:.15px;
+      position: relative;
+      overflow:hidden;
+    }
+    .tab:hover{ border-color: var(--stroke2); background: rgba(0,71,171,.40); }
+    .tab:active{ transform: scale(.985); }
+    .tab.active{
+      border-color: rgba(255,255,255,.26);
+      background:
+        rgba(255,255,255,.06);
+      box-shadow: 0 0 0 2px rgba(255,255,255,.04) inset, 0 0 0 2px rgba(255,255,255,.06);
+      outline: 1px solid rgba(255,255,255,.06);
+    }
+
+    /* Screens */
+    .screen{ display:none; }
+    .screen.active{ display:block; }
+
+    .hero{
+      padding: 18px 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .hero h1{
+      margin:0;
+      font-size: 1.55rem;
+      letter-spacing:.2px;
+    }
+    .hero p{
+      margin:0;
+      color: var(--muted);
+      line-height:1.35;
+    }
+
+    /* Home grid */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width: 780px){
+      .grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    .tile{
+      padding: 14px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: rgba(0,71,171,.15);
+      box-shadow: 0 16px 50px rgba(0,0,0,.36);
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      user-select:none;
+      min-height: 112px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap: 10px;
+      position:relative;
+      overflow:hidden;
+    }
+    .tile::before{
+      content:"";
+      position:absolute; inset:-70px;
+      opacity:.95;
+      transform: rotate(12deg);
+      pointer-events:none;
+    }
+    .tile:hover{ border-color: var(--stroke2); background: rgba(0,71,171,.15); }
+    .tile:active{ transform: scale(.985); }
+
+    .tileTop{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+      gap:8px;
+      position:relative;
+    }
+    .pill{
+      font-size:.78rem;
+      color: rgba(30,30,40,.90);
+      border: 1px solid rgba(0,71,171,.45);
+      background: rgba(0,71,171,.40);
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space:nowrap;
+    }
+    .tileName{
+      font-weight: 860;
+      letter-spacing:.2px;
+      position:relative;
+    }
+    .tileDesc{
+      color: var(--muted);
+      font-size: .9rem;
+      line-height:1.25;
+      position:relative;
+    }
+
+    .panel{
+      padding: var(--pad2);
+      background: linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,0));
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    .sectionTitle{
+      margin:0 0 10px;
+      font-size: 1.22rem;
+      letter-spacing:.2px;
+      font-weight: 860;
+    }
+    .hint{ color: var(--muted); margin: 0 0 14px; line-height:1.35; }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin: 12px 0;
+    }
+    label{
+      color: rgba(30,30,40,.90);
+      font-weight: 760;
+      font-size: .92rem;
+    }
+    input[type="text"], textarea, select{
+      font-size: 16px; /* prevent iOS Safari auto-zoom on focus */
+      line-height: 1.25;
+
+      border: 1px solid rgba(0,71,171,.45);
+      background: rgba(0,71,171,.16);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 12px;
+      outline:none;
+      box-shadow: 0 0 0 0 rgba(99,179,255,0);
+      transition: border-color .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    textarea{ min-height: 92px; resize: vertical; }
+    textarea.shortArea{ min-height: 56px; resize: none; }
+    input[type="text"]:focus, textarea:focus, select:focus{
+      border-color: rgba(255,255,255,.22);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.06), 0 0 0 3px rgba(99,179,255,.10);
+      background: rgba(0,71,171,.40);
+    }
+
+    .row{
+      display:flex;
+      gap: 12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .divider{
+      height:1px;
+      background: rgba(255,255,255,.08);
+      margin: 16px 0;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(0,71,171,.40);
+      background: rgba(0,71,171,.16);
+      border-radius:999px;
+      padding:8px 12px;
+      color: rgba(30,30,40,.90);
+      font-weight:760;
+      font-size:.9rem;
+      white-space:nowrap;
+    }
+
+    .sliderWrap{
+      border: 1px solid rgba(0,71,171,.40);
+      background: rgba(0,71,171,.14);
+      border-radius: 14px;
+      padding: 14px 12px;
+    }
+    input[type="range"]{
+      width:100%;
+    }
+    .sliderMeta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size:.9rem;
+    }
+    .bigNumber{
+      font-weight: 880;
+      color: rgba(20,20,30,.92);
+    }
+
+    .small{
+      font-size:.9rem;
+      color: var(--muted);
+      line-height:1.35;
+    }
+
+    .aboutCard{
+      border: 1px solid rgba(0,71,171,.35);
+      background: rgba(255,255,255,.035);
+      border-radius: 18px;
+      padding: 14px;
+      line-height: 1.35;
+      color: rgba(30,30,40,.90);
+    }
+    .aboutCard b{ color: rgba(20,20,30,.95); }
+
+    
+    /* Modal */
+    .modalBackdrop{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.56);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding: 16px;
+      padding-top: calc(16px + env(safe-area-inset-top));
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index: 999;
+    }
+    .modalBackdrop.show{ display:flex; }
+    .modal{
+      color: #111111;
+      width: min(920px, 100%);
+      border-radius: 22px;
+      border: 1px solid rgba(0,71,171,.40);
+      background: linear-gradient(180deg, rgba(20,24,40,.96), rgba(8,10,18,.94));
+      box-shadow: 0 30px 120px rgba(0,0,0,.65);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      max-height: calc(100vh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
+    @supports (height: 100dvh){
+      .modal{
+      color: #111111; max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
+    }
+    @supports (height: 100svh){
+      .modal{
+      color: #111111; max-height: calc(100svh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
+    }
+    .modalHeader{
+      color: #111111;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: calc(12px + var(--sat)) 16px 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,71,171,.15);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .modalHeader h2{
+      color: rgba(255,255,255,.95);
+    }
+    .modalBody{ padding: 16px; overflow:auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+    .modalClose{
+      position: static;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height: 44px;
+      min-width: 44px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.95);
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: rgba(255,255,255,.95);
+    }
+#modalOverlayBack{display:none !important;}
+
+    
+    /* Ensure Close/Back button stays visible in iOS standalone mode */
+    body.modalOpen .modalClose{
+      position: fixed;
+      top: calc(6px + var(--sat));
+      right: 14px;
+      z-index: 1000000;
+      pointer-events: auto;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.20);
+      color: rgba(255,255,255,.95);
+}
+    body.modalOpen .modalHeader{
+      color: #111111;
+      padding-right: 120px; /* leave room so title doesn't collide with fixed button */
+    }
+.twoCol{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 820px){
+      .twoCol{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .presetRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .swatch{
+      width: 48px; height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,71,171,.45);
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+    }
+    .swatch::after{
+      content:"";
+      position:absolute; inset:-30px;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.30), transparent 55%);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .swatch.active{
+      outline: 2px solid rgba(255,255,255,.24);
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.62);
+      border: 1px solid rgba(0,71,171,.45);
+      color: rgba(20,20,30,.92);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 760;
+      font-size: .92rem;
+      display:none;
+      z-index: 1000;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+    }
+    .toast.show{ display:block; }
+
+    /* Timer */
+    .timerBox{
+      border: 1px solid rgba(0,71,171,.40);
+      background: rgba(0,71,171,.14);
+      border-radius: 18px;
+      padding: 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+    }
+    .timerTime{
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: .6px;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .brandLogoWrap, .brandLogoWrap::after, .splashLogoWrap, .splashLogoWrap::after{ animation: none !important; }
+      *{ scroll-behavior:auto !important; }
+    }
+  
+    /* Tap safety on iOS: ensure main content sits above background layers */
+    .wrap, .glass, .topbar{ position: relative; z-index: 1; }
+
+  
+    /* Top bar safe-area padding so logo never drifts into the left edge */
+    .topBar{
+      padding-left: calc(16px + var(--sal)) !important;
+      padding-right: calc(16px + var(--sar)) !important;
+    }
+    .brandMark{
+      width: 38px !important;
+      height: 38px !important;
+      flex: 0 0 38px !important;
+      overflow: hidden !important;
+      border-radius: 14px !important;
+    }
+    .brandMark img{
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
+      display:block !important;
+    }
+
+    /* Always-visible modal Back button in iOS standalone mode */
+    .modalOverlayBack{
+      position: fixed;
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      right: calc(12px + env(safe-area-inset-right, 0px));
+      z-index: 2147483647;
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(18,18,26,.55);
+      color: rgba(20,20,30,.92);
+      font-weight: 800;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+  
+
+    /* Splash Enter button (glow style) */
+    .splash #enterBtn{
+      position: relative;
+      padding: 14px 38px;
+      border-radius: 18px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      background: linear-gradient(180deg, rgba(120,190,255,.98), rgba(30,120,255,.96));
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow:
+        0 22px 60px rgba(0,120,255,.75),
+        0 2px 0 rgba(255,255,255,.15) inset,
+        0 0 0 1px rgba(40,140,255,.25) inset;
+      text-shadow: 0 1px 10px rgba(0,0,0,.35);
+      transform: translateZ(0);
+      overflow: visible;
+    }
+    .splash #enterBtn::before{
+      content:"";
+      position:absolute;
+      inset:-18px;
+      border-radius: 26px;
+      background: radial-gradient(circle at 50% 45%, rgba(120,190,255,.85), rgba(60,160,255,.30) 40%, transparent 72%);
+      filter: blur(8px);
+      opacity: .95;
+      z-index: -1;
+      pointer-events:none;
+    }
+    .splash #enterBtn::after{
+      content:"";
+      position:absolute;
+      inset:-44px;
+      border-radius: 44px;
+      background: conic-gradient(from 180deg at 50% 50%,
+        transparent 0deg,
+        rgba(150,220,255,.40) 40deg,
+        transparent 95deg,
+        rgba(150,220,255,.28) 160deg,
+        transparent 230deg,
+        rgba(150,220,255,.34) 300deg,
+        transparent 360deg);
+      -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 48%, rgba(0,0,0,1) 60% 100%);
+      mask: radial-gradient(circle at 50% 50%, transparent 0 48%, rgba(0,0,0,1) 60% 100%);
+      filter: blur(12px);
+      opacity: .55;
+      z-index: -2;
+      pointer-events:none;
+    }
+    .splash #enterBtn:hover{ filter: brightness(1.05); }
+    .splash #enterBtn:active{ transform: translateY(1px); filter: brightness(.98); }
+
+  
+
+    .splash .appTitle{
+      color: #ffffff;
+      font-weight: 900;
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+      text-shadow: 0 0 18px rgba(0,0,0,.45), 0 0 50px rgba(0,120,255,.85);
+    }
+
+
+    .splash .small{
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 2px 14px rgba(0,0,0,.75);
+    }
+
+
+    .modal, .modalHeader, .modalBody{
+      color: rgba(255,255,255,.92);
+    }
+
+
+    .modalBody label, .modalBody .small, .modalBody .muted, .modalBody b{
+      color: rgba(255,255,255,.92);
+    }
+
+
+    .modalBody input[type="text"], .modalBody textarea, .modalBody select{
+      color: rgba(255,255,255,.95);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+
+
+    .modalBody ::placeholder{
+      color: rgba(255,255,255,.65);
+    }
+
+
+    .modalBody .aboutCard{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+    }
+
+
+    /* v12 readability fixes */
+    .modal .btn{ color: rgba(255,255,255,.95); }
+    .modal .btnGhost{
+      color: rgba(255,255,255,.95);
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.22);
+    }
+    .modal .btnGhost:hover{ background: rgba(255,255,255,.16); }
+
+    .modal .aboutCard{
+      color: rgba(255,255,255,.95);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .modal .aboutCard b{ color: rgba(255,255,255,.98); }
+    .modal .aboutCard p, .modal .aboutCard span{
+      color: rgba(255,255,255,.92);
+      text-shadow: none;
+    }
+
+    .modalBody p{ color: rgba(255,255,255,.92); text-shadow:none; }
+
+
+
+    /* v13: prevent accidental horizontal scroll on mobile */
+    html, body{
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    *, *::before, *::after{ box-sizing: border-box; }
+    .wrap, .sheet, .modal, .splash{ max-width: 100%; overflow-x: hidden; }
+
+
+
+    /* v14: stronger iOS horizontal-scroll clamp */
+    html, body{
+      width: 100vw;
+      max-width: 100vw;
+      overflow-x: hidden; /* fallback */
+      overflow-x: clip;
+      overscroll-behavior-x: none;
+      -webkit-text-size-adjust: 100%;
+    }
+    body{
+      position: relative;
+      touch-action: pan-y;
+    }
+    #app, .app, .wrap, .shell, .sheet, main{
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      overflow-x: clip;
+    }
+
+</style>
+</head>
+
+<body>
+  <!-- Splash Screen -->
+  <div class="splash" id="splash">
+    <div class="splashCard">
+      <div class="splashLogoWrap" aria-hidden="true">
+        <img class="splashLogo" src="logo.png" alt="" />
+      </div>
+      <h1 class="appTitle">The Nieve Reset</h1>
+      <p class="splashSub">Short tools for when your brain gets loud.</p>
+      <button class="btn btnPrimary" id="enterBtn">Begin</button>
+      <div class="small" style="margin-top:14px; opacity:1; color:#ffffff; text-shadow:0 0 10px rgba(0,0,0,.6);">
+        Use what helps. Continue your day.
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand" role="button" tabindex="0" aria-label="Go home" onclick="App.go('home')">
+        <div class="brandLogoWrap" aria-hidden="true">
+          <img class="brandLogo" src="logo.png" alt="" />
+        </div>
+        <div class="brandTxt">
+          <div class="titleSmall">The Nieve Reset</div>
+          <div class="subtitle">Short tools for when your brain gets loud.</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="iconBtn" onclick="App.openModal('about', event)" aria-label="About">
+          <span class="icon">ⓘ</span><span>About</span>
+        </button>
+        <button class="iconBtn" onclick="App.openModal('settings', event)" aria-label="Settings">
+          <span class="icon">⚙︎</span><span>Settings</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="glass">
+      <div class="glassInner">
+
+        <div class="tabs" aria-label="Navigation">
+          <button class="tab active" id="tab-home" onclick="App.go('home')">Home</button>
+          <button class="tab" id="tab-mind" onclick="App.go('mind')">Mind Check</button>
+          <button class="tab" id="tab-zoom" onclick="App.go('zoom')">Zoom Out</button>
+          <button class="tab" id="tab-sprint" onclick="App.go('sprint')">Task Sprint</button>
+          <button class="tab" id="tab-future" onclick="App.go('future')">Future Me</button>
+        </div>
+
+        <!-- HOME -->
+        <section class="screen active" id="screen-home">
+          <div class="hero">
+            <h1>Use only when needed.</h1>
+            <p><b>Pattern interrupt tools.</b> Use what helps, for as long as you want. No daily tracking required.</p>
+
+            <div class="grid">
+              <div class="tile" onclick="App.go('mind')">
+                <div class="tileTop">
+                  <div class="pill">2 min</div>
+                  <div class="pill">reality check</div>
+                </div>
+                <div class="tileName">Mind Check</div>
+                <div class="tileDesc">When your brain invents a social story. Run a quick check.</div>
+              </div>
+
+              <div class="tile" onclick="App.go('zoom')">
+                <div class="tileTop">
+                  <div class="pill">30 sec</div>
+                  <div class="pill">standard</div>
+                </div>
+                <div class="tileName">Zoom Out</div>
+                <div class="tileDesc">If you are harsher on yourself than others. Re-balance.</div>
+              </div>
+
+              <div class="tile" onclick="App.go('sprint')">
+                <div class="tileTop">
+                  <div class="pill">10 to 30</div>
+                  <div class="pill">focus</div>
+                </div>
+                <div class="tileName">Task Sprint</div>
+                <div class="tileDesc">When anxiety plus ADD stalls you. Do one small thing.</div>
+              </div>
+
+              <div class="tile" onclick="App.go('future')">
+                <div class="tileTop">
+                  <div class="pill">10 sec</div>
+                  <div class="pill">steady</div>
+                </div>
+                <div class="tileName">Future Me</div>
+                <div class="tileDesc">A short line from a calmer version of you. Tone in Settings.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="aboutCard">
+              <b>Use what helps.</b><br>
+              <span class="small">This is not a place to think longer. It is a place to stop the loop and return to your day when you&rsquo;re ready. One tool or a couple.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- MIND CHECK -->
+        <section class="screen" id="screen-mind">
+          <h2 class="sectionTitle">Mind Check</h2>
+          <p class="hint">Fast interrupt for spirals. One screen at a time.</p>
+
+          <div id="mind-step-1" class="mindStep">
+            <div class="field">
+              <label for="mind-event">What happened? (one sentence)</label>
+              <input id="mind-event" type="text" maxlength="160" onfocus="this.placeholder='';" placeholder="Example: Walked past a group." />
+            </div>
+            <button class="btn btnPrimary" onclick="Mind.next(1)">Next</button>
+          </div>
+
+          <div id="mind-step-2" class="mindStep" style="display:none;">
+            <div class="field">
+              <label for="mind-story">What story is your brain telling?</label>
+              <input id="mind-story" type="text" maxlength="160" onfocus="this.placeholder='';" placeholder="Example: They laughed." />
+            </div>
+            <div class="row">
+              <button class="btn btnGhost" onclick="Mind.back(2)">Back</button>
+              <button class="btn btnPrimary" onclick="Mind.next(2)">Next</button>
+            </div>
+          </div>
+
+          <div id="mind-step-3" class="mindStep" style="display:none;">
+            <div class="sliderWrap">
+              <label for="mind-certainty">How sure are you?</label>
+              <input id="mind-certainty" type="range" min="0" max="100" value="70" oninput="Mind.updateCertainty(this.value)" />
+              <div class="sliderMeta">
+                <span>0%</span>
+                <span class="bigNumber"><span id="mind-certainty-val">70</span>%</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn btnGhost" onclick="Mind.back(3)">Back</button>
+              <button class="btn btnPrimary" onclick="Mind.next(3)">Next</button>
+            </div>
+          </div>
+
+          <div id="mind-step-4" class="mindStep" style="display:none;">
+            <p class="hint" style="margin-bottom:10px;">Pick one. Edit if needed.</p>
+
+            <div class="field">
+              <label for="mind-alt1">Another explanation (neutral)</label>
+              <textarea id="mind-alt1" class="shortArea" maxlength="160"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="mind-alt2">Another explanation (benign)</label>
+              <textarea id="mind-alt2" class="shortArea" maxlength="160"></textarea>
+            </div>
+
+            <div class="aboutCard" style="margin-top:10px;">
+              <b>Certainty check:</b> You have a hypothesis, not proof.
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn btnGhost" onclick="Mind.back(4)">Back</button>
+              <button class="btn btnPrimary" onclick="Mind.next(4)">Next</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="aboutCard">
+              <b>Optional: Evidence (10 seconds)</b>
+              <div class="small" style="margin-top:8px;">
+                <b>Story evidence:</b> What did I literally see or hear that supports my story?<br>
+                <b>Neutral evidence:</b> What else could fit the same facts?
+              </div>
+              <div class="small" style="margin-top:10px; opacity:.95;">
+                Example:<br>
+                Story evidence: “They looked at me and laughed.”<br>
+                Neutral evidence: “They were laughing before I arrived.”
+              </div>
+            </div>
+          </div>
+
+          <div id="mind-step-5" class="mindStep" style="display:none;">
+            <div class="sliderWrap">
+              <label for="mind-recheck">Re-check certainty now</label>
+              <input id="mind-recheck" type="range" min="0" max="100" value="50" oninput="Mind.updateRecheck(this.value)" />
+              <div class="sliderMeta">
+                <span>0%</span>
+                <span class="bigNumber"><span id="mind-recheck-val">50</span>%</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn btnGhost" onclick="Mind.back(5)">Back</button>
+              <button class="btn btnPrimary" onclick="Mind.finish()">Done</button>
+            </div>
+          </div>
+
+          <div id="mind-step-6" class="mindStep" style="display:none;">
+            <div class="aboutCard">
+              <b>Done.</b> You did the check. Return to your day.
+              <div class="small" style="margin-top:8px;">If your brain tries to restart the loop, run Mind Check again or close the app.</div>
+            </div>
+
+            <div class="row" style="margin-top:14px; flex-wrap:wrap; gap:10px;">
+              <button class="btn btnPrimary" onclick="Mind.exit()">Exit</button>
+              <button class="btn btnGhost" onclick="Mind.reset()">New check</button>
+            </div>
+          </div>
+                  <div id="mind-history" style="display:none;"></div>
+</section>
+
+        <!-- ZOOM OUT -->
+        <section class="screen" id="screen-zoom">
+          <h2 class="sectionTitle">Zoom Out</h2>
+          <p class="hint">Perspective shift. One sentence. Then exit.</p>
+
+          <div class="field">
+            <label for="zoom-situation">What happened? (one line)</label>
+            <input id="zoom-situation" type="text" maxlength="160" onfocus="this.placeholder='';" placeholder="Example: Said something awkward." />
+          </div>
+
+          <div class="field">
+            <label for="zoom-question">If someone else did exactly this, what would you think about them?</label>
+            <input id="zoom-question" type="text" maxlength="160" onfocus="this.placeholder='';" placeholder="Example: They are fine." />
+          </div>
+
+          <div class="row">
+            <button class="btn btnPrimary" onclick="Zoom.apply()">Apply to me</button>
+            <button class="btn btnGhost" onclick="Zoom.clear()">Clear</button>
+          </div>
+
+          <div id="zoom-result" style="display:none; margin-top:14px;">
+            <div class="aboutCard">
+              <b>Apply it:</b>
+              <div class="small" style="margin-top:8px;" id="zoom-apply-text"></div>
+              <div class="divider"></div>
+              <div class="small">Done. Close the loop.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TASK SPRINT -->
+        <section class="screen" id="screen-sprint">
+          <h2 class="sectionTitle">Task Sprint</h2>
+          <p class="hint">One micro-goal. Timer. Done.</p>
+
+          <div class="row">
+            <span class="badge">Default: <span id="sprint-default-badge" style="margin-left:6px;">20</span> min</span>
+          </div>
+
+          <div class="field">
+            <label for="sprint-goal">Micro-goal</label>
+            <input id="sprint-goal" type="text" maxlength="160" onfocus="this.placeholder='';" placeholder="Example: Outline one paragraph." />
+          </div>
+
+          <div class="row">
+            <button class="btn btnGhost" onclick="Sprint.setMinutes(10)">10</button>
+            <button class="btn btnGhost" onclick="Sprint.setMinutes(20)">20</button>
+            <button class="btn btnGhost" onclick="Sprint.setMinutes(30)">30</button>
+            <span class="small" style="margin-left:auto;">Selected: <b><span id="sprint-minutes">20</span> min</b></span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="timerBox">
+            <div>
+              <div class="small">Time left</div>
+              <div class="timerTime" id="sprint-time">20:00</div>
+            </div>
+            <div class="row">
+              <button class="btn btnPrimary" id="sprint-start" onclick="Sprint.start()">Start</button>
+              <button class="btn btnGhost" id="sprint-pause" onclick="Sprint.pause()" style="display:none;">Pause</button>
+              <button class="btn btnGhost" id="sprint-resume" onclick="Sprint.resume()" style="display:none;">Resume</button>
+              <button class="btn btnDanger" onclick="Sprint.reset()">Reset</button>
+            </div>
+          </div>
+
+          <div id="sprint-done" style="display:none; margin-top:14px;">
+            <div class="aboutCard">
+              <b>Done.</b> Did you complete the micro-goal?
+              <div class="row" style="margin-top:12px;">
+                <button class="btn btnPrimary" onclick="Sprint.finish(true)">Yes</button>
+                <button class="btn btnGhost" onclick="Sprint.finish(false)">Not today</button>
+              </div>
+              <div class="small" style="margin-top:10px;">Either way, exit. Do not negotiate with the timer.</div>
+            </div>
+          </div>
+
+          <audio id="ding" preload="auto">
+            <source src="data:audio/wav;base64,UklGRjQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YRAAAAAA/////wAAAP///wAAAP///wAAAP///wAAAP///w==" type="audio/wav">
+          </audio>
+        </section>
+
+        <!-- FUTURE ME -->
+        <section class="screen" id="screen-future">
+          <h2 class="sectionTitle">Future Me</h2>
+          <p class="hint">Short reality checks. Tone can be changed in Settings.</p>
+
+          <div class="aboutCard" id="future-card">
+            <div class="small" style="margin-bottom:10px; color:rgba(40,40,55,.85);">Message</div>
+            <div style="font-weight:860; font-size:1.12rem; line-height:1.25;" id="future-text"></div>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn btnPrimary" onclick="Future.next()">Next</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modalBackdrop" id="modalBackdrop" onclick="App.modalBackdropClick(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Modal" onclick="event.stopPropagation()">
+      <div class="modalHeader">
+        <h2 id="modalTitle">Modal</h2>
+        <button id="modalCloseBtn" class="modalClose" onclick="App.closeModal()">Back</button>
+      </div>
+      <div class="modalBody" id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Saved</div>
+
+<script>
+/* =========
+   Storage
+========= */
+const Store = {
+  k: {
+    settings: "nieve_reset_settings_v1",
+    mind: "nieve_reset_mind_entries_v1"
+  },
+  get(key, fallback){
+    try{
+      const raw = localStorage.getItem(key);
+      if(!raw) return fallback;
+      return JSON.parse(raw);
+    }catch(e){ return fallback; }
+  },
+  set(key, val){
+    localStorage.setItem(key, JSON.stringify(val));
+  }
+};
+
+/* =========
+   App
+========= */
+const App = {
+  screens: ["home","mind","zoom","sprint","future"],
+  settings: {
+    textSize: "default",
+    haptics: true,
+    sound: true,
+    sprintDefault: 20,
+    futureTone: "neutral"
+  },
+
+  isStandalone(){
+    // iOS Safari uses navigator.standalone, others use display-mode
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || (window.navigator && window.navigator.standalone === true);
+  },
+
+  syncStandaloneControls(){
+    const standaloneBtn = document.getElementById("standaloneBackBtn");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    if(!standaloneBtn || !modalCloseBtn) return;
+    const on = this.isStandalone();
+    standaloneBtn.style.display = on ? "inline-flex" : "none";
+    modalCloseBtn.style.display = on ? "none" : "inline-flex";
+  },
+
+  init(){
+    // Splash enter
+    const enter = document.getElementById("enterBtn");
+    enter.addEventListener("click", ()=> this.enterApp());
+
+    // Allow Enter key
+    enter.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); this.enterApp(); }
+    });
+
+    // Load settings
+    const saved = Store.get(Store.k.settings, null);
+    if(saved) this.settings = { ...this.settings, ...saved };
+
+    this.applySettings();
+    this.go("home");
+    Future.init();
+    Mind.refreshSavedCount();
+    Sprint.setMinutes(this.settings.sprintDefault);
+    document.getElementById("sprint-default-badge").textContent = this.settings.sprintDefault;
+
+    // Standalone (Added to Home Screen) controls
+    this.syncStandaloneControls();
+
+    // Accessibility: tap brand with keyboard
+    document.querySelector(".brand").addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); this.go("home"); }
+    });
+  },
+
+  enterApp(){
+    const splash = document.getElementById("splash");
+    if(!splash) return;
+    // Fade out then fully remove so it can never block taps
+    splash.classList.add("hide");
+    splash.setAttribute("aria-hidden","true");
+    try{ this.haptic(10); }catch(e){}
+    setTimeout(()=>{
+      try{ splash.remove(); }catch(e){ splash.style.display="none"; }
+    }, 420);
+  },
+
+  go(name){
+    this.screens.forEach(s=>{
+      document.getElementById("screen-"+s).classList.remove("active");
+      document.getElementById("tab-"+s).classList.remove("active");
+    });
+    document.getElementById("screen-"+name).classList.add("active");
+    document.getElementById("tab-"+name).classList.add("active");
+    this.haptic(8);
+
+    if(name==="mind"){ Mind.onEnter(); }
+    if(name==="future"){ Future.onEnter(false); }
+  },
+
+  haptic(ms){
+    if(!this.settings.haptics) return;
+    if(navigator.vibrate) navigator.vibrate(ms);
+  },
+
+  toast(msg="Done"){
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(()=> t.classList.remove("show"), 1200);
+  },
+
+  applySettings(){
+    const presets = {
+      sky: {
+        aur1:"rgba(99,179,255,.18)",
+        aur2:"rgba(186,104,255,.14)",
+        aur3:"rgba(88,255,200,.10)",
+        titleGlow:"rgba(120,190,255,.24)"
+      },
+      violet: {
+        aur1:"rgba(182,124,255,.16)",
+        aur2:"rgba(99,179,255,.12)",
+        aur3:"rgba(255,205,115,.08)",
+        titleGlow:"rgba(182,124,255,.22)"
+      },
+      teal: {
+        aur1:"rgba(87,240,208,.14)",
+        aur2:"rgba(186,104,255,.12)",
+        aur3:"rgba(99,179,255,.10)",
+        titleGlow:"rgba(87,240,208,.20)"
+      },
+      sunset: {
+        aur1:"rgba(255,110,199,.22)",
+        aur2:"rgba(155,92,255,.20)",
+        aur3:"rgba(255,200,87,.16)",
+        titleGlow:"rgba(160,210,255,.28)"
+      }
+    };
+
+      const p = presets.violet;
+
+
+    document.documentElement.style.setProperty("--aurora1", p.aur1);
+    document.documentElement.style.setProperty("--aurora2", p.aur2);
+    document.documentElement.style.setProperty("--aurora3", p.aur3);
+    document.documentElement.style.setProperty("--titleGlow", p.titleGlow);
+
+    const map = { small:"15px", default:"16px", large:"17.5px" };
+    document.documentElement.style.setProperty("--fs", map[this.settings.textSize] || "16px");
+
+    document.getElementById("sprint-default-badge").textContent = this.settings.sprintDefault;
+  },
+
+  saveSettings(){
+    Store.set(Store.k.settings, this.settings);
+    this.applySettings();
+  },
+
+  openModal(which, evt){
+      try{ if(evt){ evt.preventDefault(); evt.stopPropagation(); } }catch(e){}
+document.body.classList.add('modalOpen');
+const title = document.getElementById("modalTitle");
+    const body = document.getElementById("modalBody");
+    const closeBtn = document.querySelector(".modalClose");
+    if(closeBtn){ closeBtn.textContent = (which === "settings") ? "Back" : "Close"; }
+
+    if(which === "about"){
+      title.textContent = "About";
+      body.innerHTML = `
+        <div class="aboutCard">
+          <b>What this is:</b> Quick tools for when your brain gets loud.<br><br>
+          <b>What it is not:</b> Therapy. Diagnosis. A daily tracker.<br><br>
+          <b>How to use:</b> Open only when needed. Use one tool. Exit.<br><br>
+          <b>Privacy:</b> Entries stay on this device unless you export.
+        </div>
+      `;
+    }
+
+    if(which === "settings"){
+      title.textContent = "Settings";
+      body.innerHTML = this.settingsUI();
+      this.wireSettingsUI();
+    }
+
+    document.getElementById("modalBackdrop").classList.add("show");
+    this.haptic(8);
+  },
+
+  closeModal(){
+document.body.classList.remove('modalOpen');
+document.getElementById("modalBackdrop").classList.remove("show");
+    this.haptic(6);
+  },
+
+  modalBackdropClick(e){
+// If user taps outside, close and clear modalOpen class
+this.closeModal();
+  },
+
+  settingsUI(){
+    return `
+      <div class="twoCol">
+        <div class="aboutCard">
+          
+
+          <b>Text size</b>
+          <div class="row" style="margin-top:10px;">
+            <button class="btn btnGhost" id="fs-small">Small</button>
+            <button class="btn btnGhost" id="fs-default">Default</button>
+            <button class="btn btnGhost" id="fs-large">Large</button>
+          </div>
+        </div>
+
+        <div class="aboutCard">
+          <b>Behavior</b>
+          <div class="field" style="margin-top:10px;">
+            <label for="toggle-haptics">Haptics</label>
+            <select id="toggle-haptics">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="toggle-sound">Timer sound</label>
+            <select id="toggle-sound">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="sprint-default">Task Sprint default</label>
+            <select id="sprint-default">
+              <option value="10">10 min</option>
+              <option value="20">20 min</option>
+              <option value="30">30 min</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="future-tone">Future Me tone</label>
+            <select id="future-tone">
+              <option value="random">Random (all)</option>
+              <option value="neutral">Neutral</option>
+              <option value="gentle">Gentle</option>
+              <option value="witty">Slightly witty</option>
+            </select>
+            <div class="muted" style="margin-top:8px; font-size:13px; line-height:1.35;">
+              Random pulls from all tones (45 lines). Change this anytime.
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <b>Data</b>
+          <div class="row" style="margin-top:10px;">
+            <button class="btn btnGhost" id="export-data">Export settings</button>
+            <button class="btn btnDanger" id="clear-data">Clear all</button>
+          </div>
+          <div class="row" style="margin-top:10px;">
+            <button class="btn btnGhost" id="import-data">Import settings JSON</button>
+          </div>
+          <input id="import-file" type="file" accept="application/json" style="display:none" />
+          <div class="small" style="margin-top:10px; color:rgba(255,255,255,.72);">
+            Export saves your settings as JSON. Import loads them.
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  wireSettingsUI(){
+  // Accent color swatches (optional). If the swatches are not present in the DOM, skip safely.
+  const swatches = ["sunset","sky","violet","teal"];
+  const anySwatch = swatches.some(n => document.getElementById("sw-"+n));
+  if(anySwatch){
+    const setSwatchActive = ()=> {
+      swatches.forEach(n=>{
+        const el = document.getElementById("sw-"+n);
+        if(!el) return;
+        // Active styling (if your CSS uses it)
+        el.classList.toggle("active", (this.settings.accent===n));
+      });
+    };
+    swatches.forEach(name=>{
+      const el = document.getElementById("sw-"+name);
+      if(!el) return;
+      el.onclick = ()=>{
+        this.settings.accent = name;
+        this.saveSettings();
+        setSwatchActive();
+        this.haptic(10);
+      };
+    });
+    setSwatchActive();
+  }
+
+  const setFS = (v)=>{
+    this.settings.textSize = v;
+    this.saveSettings();
+    this.haptic(10);
+  };
+  const fsSmall = document.getElementById("fs-small");
+  const fsDefault = document.getElementById("fs-default");
+  const fsLarge = document.getElementById("fs-large");
+  if(fsSmall) fsSmall.onclick = ()=> setFS("small");
+  if(fsDefault) fsDefault.onclick = ()=> setFS("default");
+  if(fsLarge) fsLarge.onclick = ()=> setFS("large");
+
+  const hSel = document.getElementById("toggle-haptics");
+  if(hSel){
+    hSel.value = this.settings.haptics ? "on" : "off";
+    hSel.onchange = ()=>{ this.settings.haptics = (hSel.value==="on"); this.saveSettings(); };
+  }
+
+  const sSel = document.getElementById("toggle-sound");
+  if(sSel){
+    sSel.value = this.settings.sound ? "on" : "off";
+    sSel.onchange = ()=>{ this.settings.sound = (sSel.value==="on"); this.saveSettings(); };
+  }
+
+  const sd = document.getElementById("sprint-default");
+  if(sd){
+    sd.value = String(this.settings.sprintDefault);
+    sd.onchange = ()=>{
+      this.settings.sprintDefault = parseInt(sd.value,10);
+      this.saveSettings();
+      if(window.Sprint && Sprint.setMinutes) Sprint.setMinutes(this.settings.sprintDefault);
+      const badge = document.getElementById("sprint-default-badge");
+      if(badge) badge.textContent = this.settings.sprintDefault;
+    };
+  }
+
+  const ft = document.getElementById("future-tone");
+  if(ft){
+    ft.value = this.settings.futureTone;
+    ft.onchange = ()=>{
+      this.settings.futureTone = ft.value;
+      this.saveSettings();
+      if(window.Future && Future.onEnter) Future.onEnter(true);
+    };
+  }
+
+  const ex = document.getElementById("export-data");
+  if(ex) ex.onclick = ()=> Data.exportAll();
+  const cl = document.getElementById("clear-data");
+  if(cl) cl.onclick = ()=> Data.clearAll();
+
+  const vs = document.getElementById('view-saved');
+  if(vs) vs.onclick = () => openHistory();
+
+  const ib = document.getElementById('import-data');
+  const fi = document.getElementById('import-file');
+  if(ib && fi){
+    ib.onclick = () => fi.click();
+    fi.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      try{
+        const txt = await file.text();
+        const parsed = JSON.parse(txt);
+        const incoming = (parsed && typeof parsed === 'object' && parsed.settings && typeof parsed.settings === 'object')
+          ? parsed.settings
+          : parsed;
+
+        if(!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) throw new Error('Invalid JSON format');
+
+        {
+        const SETTINGS_KEYS = ["accent","textSize","haptics","sound","sprintDefault","futureTone"];
+        const sanitized = {};
+        SETTINGS_KEYS.forEach(k=>{ if(Object.prototype.hasOwnProperty.call(incoming,k)) sanitized[k]=incoming[k]; });
+        App.settings = { ...App.settings, ...sanitized };
+      }
+        Store.set(Store.k.settings, App.settings);
+        App.applySettings();
+
+        // Update visible controls (since we're already in Settings)
+        const hSel2 = document.getElementById("toggle-haptics");
+        if(hSel2) hSel2.value = App.settings.haptics ? "on" : "off";
+        const sSel2 = document.getElementById("toggle-sound");
+        if(sSel2) sSel2.value = App.settings.sound ? "on" : "off";
+        const sd2 = document.getElementById("sprint-default");
+        if(sd2) sd2.value = String(App.settings.sprintDefault);
+        const ft2 = document.getElementById("future-tone");
+        if(ft2) ft2.value = String(App.settings.futureTone || "neutral");
+
+        if(window.Sprint && Sprint.setMinutes) Sprint.setMinutes(App.settings.sprintDefault);
+        const badge2 = document.getElementById("sprint-default-badge");
+        if(badge2) badge2.textContent = App.settings.sprintDefault;
+
+        App.toast("Imported");
+        App.haptic(12);
+      }catch(err){
+        alert('Import failed: ' + (err && err.message ? err.message : String(err)));
+      }finally{
+        e.target.value = '';
+      }
+    });
+  }
+}
+};
+
+/* =========
+   Mind Check
+========= */
+const Mind = {
+  step: 1,
+
+  neutralPool: [
+    "They were reacting to their own conversation.",
+    "They were distracted or tired.",
+    "They did not notice me the way I think.",
+    "They were talking about something else entirely.",
+    "They were laughing before I arrived.",
+    "They were focused on their own stress."
+  ],
+  benignPool: [
+    "If they noticed me, it was probably neutral.",
+    "They might have been awkward too, not judging.",
+    "Their reaction could include me without being negative.",
+    "They could have liked me and I missed it.",
+    "Even if it was about me, it does not mean anything big.",
+    "A small moment is not evidence of rejection."
+  ],
+
+  onEnter(){},
+
+  updateCertainty(v){
+    document.getElementById("mind-certainty-val").textContent = v;
+  },
+  updateRecheck(v){
+    document.getElementById("mind-recheck-val").textContent = v;
+  },
+
+  showStep(n){
+    for(let i=1;i<=6;i++){
+      const el = document.getElementById("mind-step-"+i);
+      if(!el) continue;
+      el.style.display = (i===n) ? "block" : "none";
+    }
+    this.step = n;
+    App.haptic(6);
+  },
+
+  next(from){
+    if(from===1){
+      const v = document.getElementById("mind-event").value.trim();
+      if(!v){ App.toast("Add one sentence"); App.haptic(14); return; }
+    }
+    if(from===2){
+      const v = document.getElementById("mind-story").value.trim();
+      if(!v){ App.toast("Name the story"); App.haptic(14); return; }
+    }
+
+    if(from===3){
+      const _n = this.pick(this.neutralPool); const _a1 = document.getElementById("mind-alt1"); _a1.value = ""; _a1.placeholder = _n;
+      const _b = this.pick(this.benignPool); const _a2 = document.getElementById("mind-alt2"); _a2.value = ""; _a2.placeholder = _b;
+
+      const init = parseInt(document.getElementById("mind-certainty").value,10);
+      const re = Math.max(0, Math.min(100, init - 20));
+      document.getElementById("mind-recheck").value = re;
+      this.updateRecheck(re);
+    }
+
+    this.showStep(from+1);
+  },
+
+  back(from){
+    this.showStep(from-1);
+  },
+
+  pick(arr){
+    return arr[Math.floor(Math.random()*arr.length)];
+  },
+  saveAndExit(){
+    // Saving removed to keep Mind Check lightweight.
+    this.exit();
+  },
+
+  exit(){
+    // Exit
+    App.haptic(8);
+    this.reset();
+    App.go("home");
+  },
+  finish(){
+    // Complete the check (no saving yet). User decides on the Done screen.
+    App.haptic(12);
+    this.showStep(6);
+  },
+
+  refreshSavedCount(){
+    const list = Store.get(Store.k.mind, []);
+    const el = document.getElementById("mind-saved-count");
+    if(el) el.textContent = list.length;
+  },
+
+  openHistory(){
+    const box = document.getElementById("mind-history");
+    const list = Store.get(Store.k.mind, []);
+    if(box.style.display === "none"){
+      box.style.display = "block";
+    } else {
+      box.style.display = "none";
+      return;
+    }
+
+    if(list.length === 0){
+      box.innerHTML = `<div class="aboutCard"><b>No history yet.</b><div class="small" style="margin-top:8px;">Run one Mind Check and it will appear here.</div></div>`;
+      return;
+    }
+
+    const slice = list.slice(0,10);
+    box.innerHTML = slice.map((e)=>{
+      const dt = new Date(e.ts);
+      const when = dt.toLocaleString(undefined, { month:"short", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+      return `
+        <div class="aboutCard" style="margin-bottom:10px;">
+          <div class="small" style="color:rgba(40,40,55,.85);">${when}</div>
+          <div style="font-weight:860; margin-top:6px;">${escapeHtml(e.story)}</div>
+          <div class="small" style="margin-top:8px;">
+            Certainty: <b>${e.certainty0}% → ${e.certainty1}%</b><br>
+            Neutral: ${escapeHtml(e.neutralAlt)}<br>
+            Benign: ${escapeHtml(e.benignAlt)}
+          </div>
+        </div>
+      `;
+    }).join("");
+  },
+
+  reset(){
+    document.getElementById("mind-event").value = "";
+    document.getElementById("mind-story").value = "";
+    document.getElementById("mind-certainty").value = 70;
+    this.updateCertainty(70);
+    document.getElementById("mind-recheck").value = 50;
+    this.updateRecheck(50);
+    document.getElementById("mind-alt1").value = "";
+    document.getElementById("mind-alt2").value = "";
+    document.getElementById("mind-history").style.display = "none";
+    document.getElementById("mind-history").innerHTML = "";
+    this.showStep(1);
+  }
+};
+
+/* =========
+   Zoom Out
+========= */
+const Zoom = {
+  apply(){
+    const s = document.getElementById("zoom-situation").value.trim();
+    const a = document.getElementById("zoom-question").value.trim();
+    if(!s || !a){ App.toast("Two lines"); App.haptic(14); return; }
+
+    const text = `
+      Situation: <b>${escapeHtml(s)}</b><br><br>
+      Your standard for someone else: <b>${escapeHtml(a)}</b><br><br>
+      Apply it to you.
+    `;
+
+    document.getElementById("zoom-apply-text").innerHTML = text;
+    document.getElementById("zoom-result").style.display = "block";
+    App.haptic(12);
+  },
+  clear(){
+    document.getElementById("zoom-situation").value = "";
+    document.getElementById("zoom-question").value = "";
+    document.getElementById("zoom-result").style.display = "none";
+    App.haptic(8);
+  }
+};
+
+/* =========
+   Sprint Timer
+========= */
+const Sprint = {
+  minutes: 20,
+  remaining: 1200,
+  t: null,
+  running: false,
+
+  setMinutes(m){
+    if(this.running) return;
+    this.minutes = m;
+    this.remaining = m * 60;
+    this.render();
+    document.getElementById("sprint-minutes").textContent = m;
+  },
+
+  render(){
+    const mm = Math.floor(this.remaining/60);
+    const ss = this.remaining % 60;
+    document.getElementById("sprint-time").textContent =
+      String(mm).padStart(2,"0")+":"+String(ss).padStart(2,"0");
+  },
+
+  start(){
+    const goal = document.getElementById("sprint-goal").value.trim();
+    if(!goal){ App.toast("Add a micro-goal"); App.haptic(14); return; }
+    if(this.running) return;
+
+    this.running = true;
+    document.getElementById("sprint-done").style.display = "none";
+    document.getElementById("sprint-start").style.display = "none";
+    document.getElementById("sprint-pause").style.display = "inline-flex";
+    document.getElementById("sprint-resume").style.display = "none";
+
+    this.tick();
+    App.haptic(12);
+  },
+
+  tick(){
+    this.t = setInterval(()=>{
+      if(!this.running) return;
+      this.remaining--;
+      this.render();
+      if(this.remaining <= 0){
+        this.complete();
+      }
+    }, 1000);
+  },
+
+  pause(){
+    if(!this.running) return;
+    this.running = false;
+    clearInterval(this.t);
+    this.t = null;
+    document.getElementById("sprint-pause").style.display = "none";
+    document.getElementById("sprint-resume").style.display = "inline-flex";
+    App.haptic(10);
+  },
+
+  resume(){
+    if(this.running) return;
+    this.running = true;
+    document.getElementById("sprint-pause").style.display = "inline-flex";
+    document.getElementById("sprint-resume").style.display = "none";
+    this.tick();
+    App.haptic(10);
+  },
+
+  complete(){
+    this.running = false;
+    clearInterval(this.t);
+    this.t = null;
+    document.getElementById("sprint-pause").style.display = "none";
+    document.getElementById("sprint-resume").style.display = "none";
+    document.getElementById("sprint-start").style.display = "inline-flex";
+
+    if(App.settings.sound){
+      const ding = document.getElementById("ding");
+      try{ ding.currentTime = 0; ding.play(); }catch(e){}
+    }
+    App.haptic(30);
+    document.getElementById("sprint-done").style.display = "block";
+  },
+
+  reset(){
+    clearInterval(this.t);
+    this.t = null;
+    this.running = false;
+    this.remaining = this.minutes * 60;
+    this.render();
+    document.getElementById("sprint-done").style.display = "none";
+    document.getElementById("sprint-start").style.display = "inline-flex";
+    document.getElementById("sprint-pause").style.display = "none";
+    document.getElementById("sprint-resume").style.display = "none";
+    App.haptic(8);
+  },
+
+  finish(done){
+    App.toast(done ? "Good" : "Done");
+    document.getElementById("sprint-done").style.display = "none";
+    App.go("home");
+  }
+};
+
+/* =========
+   Future Me
+========= */
+const Future = {
+  idx: 0,
+  pool: {
+    neutral: [
+      "Most people are thinking about themselves, not you.",
+      "Your brain is guessing. That is not the same as knowing.",
+      "One moment does not define your social value.",
+      "Awkward is normal. It is not evidence.",
+      "This is the spotlight effect. It feels bigger to you than it is.",
+      "You do not need certainty to move on.",
+      "If someone judged you, that says more about their day than your worth.",
+      "You are allowed to exist without performing.",
+      "You can be liked without being perfect.",
+      "A quiet face is not a negative opinion.",
+      "Uncertainty is uncomfortable, not dangerous.",
+      "A thought can be loud and still be wrong.",
+      "Do not confuse anxiety with intuition.",
+      "If you cannot prove it, treat it as a hypothesis.",
+      "Close the loop. Return to your actual life."
+    ],
+    gentle: [
+      "You are adjusting to a new environment. That takes time.",
+      "You do not have to feel confident to be okay.",
+      "Today can be messy and still be a good day.",
+      "You are allowed to be new at this.",
+      "You are not behind. You are learning.",
+      "Breathe. Your value is not up for debate.",
+      "Even if you felt awkward, you are still worth being around.",
+      "You can be sensitive and strong at the same time.",
+      "You do not need to earn kindness by being flawless.",
+      "A few uncomfortable minutes are not your identity.",
+      "You are not alone in feeling this way at school.",
+      "Treat yourself like someone you genuinely care about.",
+      "You can take a small step instead of fixing everything.",
+      "It is okay to rest your mind for a moment.",
+      "You can come back to this later. Not now."
+    ],
+    witty: [
+      "Your brain is writing fan fiction again.",
+      "Nobody is grading you on vibes. You are safe.",
+      "If awkward were fatal, the human race would be gone.",
+      "You are not a mind reader. Stop pretending you are.",
+      "Plot twist: they were thinking about lunch.",
+      "That was one moment. Not a documentary series.",
+      "Your anxiety is confident. You do not have to be.",
+      "Breaking news: humans are weird sometimes.",
+      "You are not the main character in other people's group chats.",
+      "A glance is not a verdict.",
+      "Do not let a feeling file a police report.",
+      "This thought is loud, not accurate.",
+      "You can close the tab now.",
+      "We are not doing a courtroom drama today.",
+      "Congratulations, you noticed a human interaction."
+    ]
+  },
+  getTone(){
+    // Prefer the live in-memory settings, but fall back to stored settings.
+    const stored = Store.get(Store.k.settings, {});
+    const raw = (App.settings && App.settings.futureTone) ? App.settings.futureTone : stored.futureTone;
+    const t = String(raw || "neutral").toLowerCase();
+    return ["neutral","gentle","witty","random"].includes(t) ? t : "neutral";
+  },
+  lines(){
+    const tone = this.getTone();
+    if(tone === "random") return [...this.pool.neutral, ...this.pool.gentle, ...this.pool.witty];
+    return (this.pool[tone] || this.pool.neutral);
+  },
+  next(){
+    const arr = this.lines();
+    if(!arr || arr.length===0) return;
+    if(this.getTone() === "random"){
+      let ni = Math.floor(Math.random() * arr.length);
+      if(arr.length > 1 && ni === this.idx) ni = (ni + 1) % arr.length;
+      this.idx = ni;
+    } else {
+      this.idx = (this.idx + 1) % arr.length;
+    }
+    this.setText(arr[this.idx]);
+  },
+  setText(msg){
+    const el = document.getElementById("future-text");
+    if(el) el.textContent = msg || "";
+  },
+  init(){
+    // start from a random message so it doesn't feel repetitive
+    const arr = this.lines();
+    if(!arr || arr.length===0) return;
+    this.idx = Math.floor(Math.random() * arr.length);
+    this.setText(arr[this.idx]);
+  }
+};
+
+/* =========
+   Data tools
+========= */
+const Data = {
+  exportAll(){
+    const SETTINGS_KEYS = ["accent","textSize","haptics","sound","sprintDefault","futureTone"];
+    const settingsOnly = {};
+    SETTINGS_KEYS.forEach(k=>{ if(Object.prototype.hasOwnProperty.call(App.settings,k)) settingsOnly[k]=App.settings[k]; });
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      settings: settingsOnly
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "the-nieve-reset-settings.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 4000);
+    App.toast("Exported");
+    App.haptic(12);
+  },
+
+  onEnter(reset=false){
+    // Ensure the current line is visible when entering the screen
+    if(reset){ this.index = 0; }
+    const lines = this.lines();
+    const line = lines && lines.length ? lines[Math.max(0, Math.min(this.index, lines.length-1))] : "";
+    this.setText(line || "");
+  },
+
+
+  clearAll(){
+    const ok = confirm("Clear all local entries and saved items?");
+    if(!ok) return;
+
+    localStorage.removeItem(Store.k.settings);
+    localStorage.removeItem(Store.k.mind);
+
+    Mind.refreshSavedCount();
+    const mh = document.getElementById("mind-history");
+    if(mh){ mh.style.display = "none"; mh.innerHTML = ""; }
+
+    App.toast("Cleared");
+    App.haptic(20);
+  }
+};
+
+/* =========
+   Helpers
+========= */
+function escapeHtml(str){
+  return (str||"").replace(/[&<>"']/g, (m)=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[m]));
+}
+
+/* =========
+   Boot
+========= */
+window.addEventListener("DOMContentLoaded", ()=> App.init());
+</script>
+
+  <!-- Always-visible Back button overlay for iOS standalone (Settings/About modals) -->
+
+</body>
+</html>
