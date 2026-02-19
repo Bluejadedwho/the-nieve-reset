@@ -1523,20 +1523,7 @@ this.closeModal();
             </div>
           </div>
 
-          <div class="divider"></div>
-
-          <b>Data</b>
-          <div class="row" style="margin-top:10px;">
-            <button class="btn btnGhost" id="export-data">Export settings</button>
-            <button class="btn btnDanger" id="clear-data">Clear all</button>
-          </div>
-          <div class="row" style="margin-top:10px;">
-            <button class="btn btnGhost" id="import-data">Import settings JSON</button>
-          </div>
-          <input id="import-file" type="file" accept="application/json" style="display:none" />
-          <div class="small" style="margin-top:10px; color:rgba(255,255,255,.72);">
-            Export saves your settings as JSON. Import loads them.
-          </div>
+          
         </div>
       </div>
     `;
@@ -1612,63 +1599,6 @@ this.closeModal();
       this.saveSettings();
       if(window.Future && Future.onEnter) Future.onEnter(true);
     };
-  }
-
-  const ex = document.getElementById("export-data");
-  if(ex) ex.onclick = ()=> Data.exportAll();
-  const cl = document.getElementById("clear-data");
-  if(cl) cl.onclick = ()=> Data.clearAll();
-
-  const vs = document.getElementById('view-saved');
-  if(vs) vs.onclick = () => openHistory();
-
-  const ib = document.getElementById('import-data');
-  const fi = document.getElementById('import-file');
-  if(ib && fi){
-    ib.onclick = () => fi.click();
-    fi.addEventListener('change', async (e) => {
-      const file = e.target.files && e.target.files[0];
-      if(!file) return;
-      try{
-        const txt = await file.text();
-        const parsed = JSON.parse(txt);
-        const incoming = (parsed && typeof parsed === 'object' && parsed.settings && typeof parsed.settings === 'object')
-          ? parsed.settings
-          : parsed;
-
-        if(!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) throw new Error('Invalid JSON format');
-
-        {
-        const SETTINGS_KEYS = ["accent","textSize","haptics","sound","sprintDefault","futureTone"];
-        const sanitized = {};
-        SETTINGS_KEYS.forEach(k=>{ if(Object.prototype.hasOwnProperty.call(incoming,k)) sanitized[k]=incoming[k]; });
-        App.settings = { ...App.settings, ...sanitized };
-      }
-        Store.set(Store.k.settings, App.settings);
-        App.applySettings();
-
-        // Update visible controls (since we're already in Settings)
-        const hSel2 = document.getElementById("toggle-haptics");
-        if(hSel2) hSel2.value = App.settings.haptics ? "on" : "off";
-        const sSel2 = document.getElementById("toggle-sound");
-        if(sSel2) sSel2.value = App.settings.sound ? "on" : "off";
-        const sd2 = document.getElementById("sprint-default");
-        if(sd2) sd2.value = String(App.settings.sprintDefault);
-        const ft2 = document.getElementById("future-tone");
-        if(ft2) ft2.value = String(App.settings.futureTone || "neutral");
-
-        if(window.Sprint && Sprint.setMinutes) Sprint.setMinutes(App.settings.sprintDefault);
-        const badge2 = document.getElementById("sprint-default-badge");
-        if(badge2) badge2.textContent = App.settings.sprintDefault;
-
-        App.toast("Imported");
-        App.haptic(12);
-      }catch(err){
-        alert('Import failed: ' + (err && err.message ? err.message : String(err)));
-      }finally{
-        e.target.value = '';
-      }
-    });
   }
 }
 };
@@ -2040,56 +1970,6 @@ const Future = {
     if(!arr || arr.length===0) return;
     this.idx = Math.floor(Math.random() * arr.length);
     this.setText(arr[this.idx]);
-  }
-};
-
-/* =========
-   Data tools
-========= */
-const Data = {
-  exportAll(){
-    const SETTINGS_KEYS = ["accent","textSize","haptics","sound","sprintDefault","futureTone"];
-    const settingsOnly = {};
-    SETTINGS_KEYS.forEach(k=>{ if(Object.prototype.hasOwnProperty.call(App.settings,k)) settingsOnly[k]=App.settings[k]; });
-    const payload = {
-      exportedAt: new Date().toISOString(),
-      settings: settingsOnly
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "the-nieve-reset-settings.json";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=> URL.revokeObjectURL(url), 4000);
-    App.toast("Exported");
-    App.haptic(12);
-  },
-
-  onEnter(reset=false){
-    // Ensure the current line is visible when entering the screen
-    if(reset){ this.index = 0; }
-    const lines = this.lines();
-    const line = lines && lines.length ? lines[Math.max(0, Math.min(this.index, lines.length-1))] : "";
-    this.setText(line || "");
-  },
-
-
-  clearAll(){
-    const ok = confirm("Clear all local entries and saved items?");
-    if(!ok) return;
-
-    localStorage.removeItem(Store.k.settings);
-    localStorage.removeItem(Store.k.mind);
-
-    Mind.refreshSavedCount();
-    const mh = document.getElementById("mind-history");
-    if(mh){ mh.style.display = "none"; mh.innerHTML = ""; }
-
-    App.toast("Cleared");
-    App.haptic(20);
   }
 };
 
